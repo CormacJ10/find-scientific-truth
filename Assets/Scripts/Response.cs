@@ -15,7 +15,7 @@ public class Response : MonoBehaviour
         Person //think street signpost simple: job/pose (spriteName), rotation, colour
     }
 
-    private string spriteName;
+    private string spriteName = "unnamed";
     
     public Sprite sprite;
     public bool boolean;
@@ -47,4 +47,8 @@ public class Response : MonoBehaviour
         }
     }
 
+    public override string ToString()
+    {
+        return spriteName+" (Response)";
+    }
 }

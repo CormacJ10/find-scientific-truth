@@ -16,7 +16,7 @@ public class NPCSpawner : MonoBehaviour
     public GameObject baseNpc;
     public GameObject smartNpc;
     public GameObject badNpc;
-    [HideInInspector] public List<NPC> npcArray;
+    [HideInInspector] public static List<NPC> npcArray;
     public int baseCount = 10;
     public int smartCount = 5;
     public int badCount = 5;
@@ -49,13 +49,17 @@ public class NPCSpawner : MonoBehaviour
 
                 GameObject obj = GameObject.Instantiate(npc, rndPoint2D, Quaternion.identity);
                 obj.transform.parent = NPCContainer.transform;
-                obj.name = "NPC "+i.ToString();
-                NPC newNpc = new NPC(obj, npcType);
                 
+                NPCStats stats = obj.GetComponent<NPCStats>();
+                NPC newNpc = new NPC(obj, npcType);
                 npcArray.Add(newNpc);
                 i++;
             }
         }
+
+        baseNpc.SetActive(false);
+        smartNpc.SetActive(false);
+        badNpc.SetActive(false);
     }
 
     private Vector3 RandomPointInBounds(Bounds bounds, float scale)
@@ -65,10 +69,5 @@ public class NPCSpawner : MonoBehaviour
             Random.Range(bounds.min.y * scale, bounds.max.y * scale),
             Random.Range(bounds.min.z * scale, bounds.max.z * scale)
         );
-    }
-
-    public List<NPC> GetFreshNPCs()
-    {
-        return npcArray;
     }
 }

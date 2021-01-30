@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class WalkState : State
 {
-    public PolygonCollider2D playBounds;
     public float avgVel = 1;
     public float randVelMulti = 0.2f;
     public float avgDuration = 3;
@@ -17,7 +16,7 @@ public class WalkState : State
     public override IEnumerator StartState(bool isDebug = false)
     {
         if (GetComponent<Rigidbody2D>() == null) {
-            Debug.Log(this.gameObject.name + ": Rigidbody2D not found");
+            DebugPrintState(this.gameObject.name + ": Rigidbody2D not found");
             yield return null;
         }
 
@@ -27,33 +26,26 @@ public class WalkState : State
         float velMag = avgVel * Random.Range(1-randVelMulti, 1+randVelMulti);
 
         GetComponent<Rigidbody2D>().velocity = randDir * velMag;
-        if (isDebug) Debug.Log("Walk started");
+        if (isDebug) DebugPrintState("Walk started");
         timeStart = Time.time;
         duration = avgDuration * Random.Range(1-randDurMulti,1+randDurMulti);
-        yield return null;
+        yield break;
     }
 
     public override IEnumerator UpdateState(bool isDebug = false)
     {
-        if (isDebug) Debug.Log("Walking");
+        // if (isDebug) DebugPrintState("Walking");
         counter = Time.time-timeStart;//
         if (Time.time - timeStart > duration) {
-            // Debug.Log("Walk ended naturally");//
-            ExitState();
+            if (isDebug) DebugPrintState("Walk ended naturally");//
+            isExit = true;
         } else yield return null;
     }
 
-    public override void ExitState(bool isImmediateExit = false)
+    public override void ExitState(bool isDebug = false, bool isImmediateExit = false)
     {
         //stop walking
-        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero; //TODO may need to set rb to/from static to prevent other states getting pushed around
         base.ExitState(isImmediateExit);
     }
-
-    // private void OnTriggerEnter2D(Collider2D other) {
-    //     if (other.transform.tag == "PlayBounds") {
-    //         Debug.Log(gameObject.name+" has hit "+other.gameObject.name);
-    //         GetComponent<Rigidbody2D>().velocity = -1 * GetComponent<Rigidbody2D>().velocity;
-    //     }
-    // }
 }

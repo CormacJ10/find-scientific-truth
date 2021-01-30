@@ -15,16 +15,16 @@ public class IdleState : State
     {
         timeStart = Time.time;
         duration = avgDuration * Random.Range(1-randDurMulti,1+randDurMulti);
-        if (isDebug) Debug.Log("Idle started");
-        yield return null;
+        if (isDebug) DebugPrintState("Idle started");
+        yield break;
     }
 
     public override IEnumerator UpdateState(bool isDebug = false)
     {
-        if (isDebug) Debug.Log("Idling");
+        // if (isDebug) DebugPrintState("Idling");
         counter = Time.time - timeStart;//
         if (Time.time - timeStart > duration) {
-            ExitState();
+            isExit = true;
         } else yield return null;
     }
 }

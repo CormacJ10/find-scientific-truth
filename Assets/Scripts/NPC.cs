@@ -24,9 +24,9 @@ public class NPC
     private static int counter = 0;
     private int ID { get; set; }
     public GameObject GO { get; }
-    public float maxVel { get; } = 5;
-    public int influence { get; }
-    public int influenceSkill { get; set;} = 5;
+    public int influence { get; set;}
+    public int influenceMax { get; set; }
+    public int influenceSkill { get; set;}
     public NPCState state { get; set;} = NPCState.Idle; //set state after spawn, using npc-type FSM
     public NPCType type { get; set;}
     public Response response { get; set;}
@@ -35,11 +35,14 @@ public class NPC
     {
         this.ID = System.Threading.Interlocked.Increment(ref counter);
         this.GO = GO;
-        this.maxVel = maxVel;
-        this.influence = influence;
-        this.influenceSkill = influenceSkill;
+        this.GO.name = "NPC "+this.ID.ToString();
+
+        NPCStats stats = this.GO.GetComponent<NPCStats>();
+        this.influence = stats.influence;
+        this.influenceMax = stats.influenceMax;
+        this.influenceSkill = stats.influenceSkill;
         this.state = state;
-        this.type = type;
+        this.type = stats.type;
         this.response = response;
     }
 
@@ -52,10 +55,17 @@ public class NPC
     public static NPCState StateToNPCEnum(State s)
     {
         string stateName = s.GetType().ToString();
-        stateName = stateName.Remove(stateName.Length - 5); //remove "State" suffix
+        stateName = stateName.Remove(stateName.Length - "State".Length);
 
         object enumObj = System.Enum.Parse(typeof(NPCState), stateName);
 
         return (NPCState)enumObj;
+    }
+
+    public static NPC NameToNPC(string n)
+    {
+        if (n.Contains("Test")) return null;
+        int ID = (int)int.Parse(n.Substring(n.IndexOf(" ")+1));
+        return NPCSpawner.npcArray[ID-1];
     }
 }

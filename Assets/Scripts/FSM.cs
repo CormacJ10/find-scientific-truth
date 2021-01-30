@@ -8,6 +8,7 @@ public abstract class FSM : MonoBehaviour
     public List<State> stateList;
     public State curState;
     public bool isStateRunning = false;
+    public bool isDebug = false;
 
     // Start is called before the first frame update
     void Start()
@@ -23,23 +24,23 @@ public abstract class FSM : MonoBehaviour
     public IEnumerator RunFSM()
     {
         // Debug.Log(gameObject.name+": RunFSM started");
-        while (!Input.GetKeyDown("z")) {
+        while (!Input.GetKey("z")) {
             if (!isStateRunning) {
-                curState.RunState();
+                curState.RunState(isDebug);
                 isStateRunning = true;
             }
 
-            if (curState.isExit) Transition();
-
             yield return null;
+            if (curState.isExit) Transition();
         }
         // Debug.Log(gameObject.name + ": FSM ended");
         yield return null;
     }
 
-    public void ChangeState(NPC.NPCState nextState)
+    public void ChangeState(NPC.NPCState nextState, bool isImmediateExit = false)
     {
-        curState.ExitState();
+        curState.ExitState(isDebug, isImmediateExit);
+        if (isDebug) DebugPrintFSM("Transitioning to "+nextState.ToString()+"State");
         isStateRunning = false;
 
         for (int i = 0; i<stateList.Count; i++) {
@@ -47,7 +48,10 @@ public abstract class FSM : MonoBehaviour
 
             if (stateList[i].GetType() == nextStateScript) {
                 curState = stateList[i];
-                curState.RunState();
+                if (isImmediateExit) {
+                    StopAllCoroutines();
+                    StartCoroutine(RunFSM());
+                }
                 return;
             }
         }
@@ -58,27 +62,36 @@ public abstract class FSM : MonoBehaviour
     //Decide next state then change state
     public void Transition()
     {
-        // string curStateType = curState.GetType().ToString();
-        
-        // switch (curStateType)
-        // {
-        //     case "IdleState":
-        //         nextState = NPC.NPCState.Walk;
-        //         break;
-        //     case "WalkState":
-        //         nextState = NPC.NPCState.Idle;
-        //         break;
-        //     default:
-        //         Debug.Log("Either transitions are undefined for current state, "+
-        //             "or wrong state added to Inspector");
-        //         nextState = NPC.NPCState.Idle;
-        //         break;
-        // }
-        
+        if (isDebug) DebugPrintFSM("State finished naturally");
         NPC.NPCState curStateType = NPC.StateToNPCEnum(curState);
-
         ChangeState(PickNextState(curStateType));
     }
 
     public abstract NPC.NPCState PickNextState(NPC.NPCState curStateType);
+
+
+    //edited from: https://docs.unity3d.com/560/Documentation/Manual/RandomNumbers.html
+    public NPC.NPCState RNGChoose(float[] probs)
+    {
+        float total = 0;
+        foreach (float elem in probs) total += elem;
+
+        float randomPoint = Random.value * total;
+
+        for (int i = 0; i < probs.Length; i++)
+        {
+            if (randomPoint < probs[i])
+            {
+                return (NPC.NPCState)i;
+            }
+            else randomPoint -= probs[i];
+        }
+        return (NPC.NPCState)(probs.Length - 1);
+    }
+
+    public void DebugPrintFSM(string msg = null)
+    {
+        Debug.Log(gameObject.name + "[" + curState.GetType().ToString() + ", "
+            + Time.frameCount + ", " + Time.time + "s] " + msg);
+    }
 }

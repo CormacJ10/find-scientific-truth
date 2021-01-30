@@ -42,19 +42,19 @@ public class StateTest : MonoBehaviour
         // state.RunState(true);
         // DebugPrint("After Run2");
 
-        yield return new WaitForSeconds(2);
-        curState.ExitState();
-        curState = state2;
-        DebugPrint("Before Run2");
-        curState.RunState(true);
-        DebugPrint("After Run2");
+        // yield return new WaitForSeconds(2);
+        // curState.ExitState();
+        // curState = state2;
+        // DebugPrint("Before Run2");
+        // curState.RunState(true);
+        // DebugPrint("After Run2");
 
-        yield return new WaitForSeconds(2);
-        curState.ExitState();
-        curState = state;
-        DebugPrint("Before Run3");
-        curState.RunState(true);
-        DebugPrint("After Run3");
+        // yield return new WaitForSeconds(2);
+        // curState.ExitState();
+        // curState = state;
+        // DebugPrint("Before Run3");
+        // curState.RunState(true);
+        // DebugPrint("After Run3");
 
         yield return null;
     }
