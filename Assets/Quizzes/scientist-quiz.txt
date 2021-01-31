@@ -1,0 +1,32 @@
+*What is the Travelling Salesman Problem?*
+
+Given a list of cities and the distances between each pair of cities, what is the shortest possible route that visits each city exactly once and returns to the origin city?
+
+*What is Relativism?*
+
+If I am related to you, and you are related to my sister, are you related to my sister?
+
+*What is Tautatology?*
+
+If a Zebra is Red all over and green all over, do they have green skin and red stripes or red skin and green stripes.
+
+*A woman lives in a yellow one-story house. Everything in the house is yellow. What color are the stairs?*
+
+Yellow
+
+*When the son of the water returns to the parent, it dies. What is it?*
+
+Ice
+
+*What is the most uninteresting of all the periodic elements?*
+
+Boron
+
+*What is neither water nor land, and is always soaking wet?*
+
+Wetlands
+
+
+*I am a god, a planet and I can measure heat. What am I?*
+
+Mercury

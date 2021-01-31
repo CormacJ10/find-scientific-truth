@@ -25,6 +25,7 @@ public class WalkState : State
         Vector2 randDir = new Vector2(Mathf.Cos(random), Mathf.Sin(random));
         float velMag = avgVel * Random.Range(1-randVelMulti, 1+randVelMulti);
 
+        GetComponent<Rigidbody2D>().mass = 1;
         GetComponent<Rigidbody2D>().velocity = randDir * velMag;
         if (isDebug) DebugPrintState("Walk started");
         timeStart = Time.time;
@@ -46,6 +47,7 @@ public class WalkState : State
     {
         //stop walking
         GetComponent<Rigidbody2D>().velocity = Vector2.zero; //TODO may need to set rb to/from static to prevent other states getting pushed around
-        base.ExitState(isImmediateExit);
+        GetComponent<Rigidbody2D>().mass = 1000000;
+        base.ExitState(isDebug, isImmediateExit);
     }
 }

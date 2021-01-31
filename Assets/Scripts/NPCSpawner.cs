@@ -16,6 +16,9 @@ public class NPCSpawner : MonoBehaviour
     public GameObject baseNpc;
     public GameObject smartNpc;
     public GameObject badNpc;
+
+    public Sprite dummySprite;
+
     [HideInInspector] public static List<NPC> npcArray;
     public int baseCount = 10;
     public int smartCount = 5;
@@ -47,6 +50,10 @@ public class NPCSpawner : MonoBehaviour
                     spawnedBad++;
                 }
 
+                npc.GetComponent<SpriteRenderer>().sprite = dummySprite;
+
+                // npcSprite = dummySprite;
+
                 GameObject obj = GameObject.Instantiate(npc, rndPoint2D, Quaternion.identity);
                 obj.transform.parent = NPCContainer.transform;
                 
@@ -60,6 +67,10 @@ public class NPCSpawner : MonoBehaviour
         baseNpc.SetActive(false);
         smartNpc.SetActive(false);
         badNpc.SetActive(false);
+    }
+
+    public List<NPC> getNPCList(){
+        return npcArray;
     }
 
     private Vector3 RandomPointInBounds(Bounds bounds, float scale)

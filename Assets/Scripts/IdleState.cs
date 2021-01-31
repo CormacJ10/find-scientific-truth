@@ -9,7 +9,7 @@ public class IdleState : State
 
     private float timeStart = 0;
     private float duration;
-    public float counter;//
+    public float counter; //
 
     public override IEnumerator StartState(bool isDebug = false)
     {

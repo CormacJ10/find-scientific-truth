@@ -68,4 +68,17 @@ public class NPC
         int ID = (int)int.Parse(n.Substring(n.IndexOf(" ")+1));
         return NPCSpawner.npcArray[ID-1];
     }
+
+    public static bool IsStateBlocking(NPCState stateType)
+    {
+        switch (stateType)
+        {
+            case NPCState.Talk:
+                return true;
+            case NPCState.Influence:
+                return true;
+            default:
+                return false;
+        }
+    }
 }

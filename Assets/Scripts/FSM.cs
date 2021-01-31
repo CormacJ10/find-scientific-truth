@@ -10,6 +10,10 @@ public abstract class FSM : MonoBehaviour
     public bool isStateRunning = false;
     public bool isDebug = false;
 
+    //
+    public Sprite altSprite;
+    //
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,7 +28,7 @@ public abstract class FSM : MonoBehaviour
     public IEnumerator RunFSM()
     {
         // Debug.Log(gameObject.name+": RunFSM started");
-        while (!Input.GetKey("z")) {
+        while (true) {
             if (!isStateRunning) {
                 curState.RunState(isDebug);
                 isStateRunning = true;
@@ -33,8 +37,6 @@ public abstract class FSM : MonoBehaviour
             yield return null;
             if (curState.isExit) Transition();
         }
-        // Debug.Log(gameObject.name + ": FSM ended");
-        yield return null;
     }
 
     public void ChangeState(NPC.NPCState nextState, bool isImmediateExit = false)
@@ -94,4 +96,6 @@ public abstract class FSM : MonoBehaviour
         Debug.Log(gameObject.name + "[" + curState.GetType().ToString() + ", "
             + Time.frameCount + ", " + Time.time + "s] " + msg);
     }
+
+    public abstract void Reveal(NPC.NPCType type);
 }

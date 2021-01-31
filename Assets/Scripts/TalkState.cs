@@ -14,7 +14,7 @@ public class TalkState : State
 
     [HideInInspector] public bool isInitiator;
     public NPC closestNPC;
-    private GameObject closestNPCGO;
+    [HideInInspector] public GameObject closestNPCGO;
     private TalkState closestTS;
     private NPC curNPC;
     private float closestInfSkill;
@@ -29,10 +29,12 @@ public class TalkState : State
             closestTS = closestNPCGO.GetComponent<TalkState>();
             closestNPC = NPC.NameToNPC(closestNPCGO.name);
 
-            DebugPrintState("I'm talking to "+closestNPCGO.name+", a "+closestNPC.type);
-            DebugPrintState("Audience, me I/Imax/IS/S/R: " + closestNPC.influence + "/" + closestNPC.influenceMax + "/"
-                + closestNPC.influenceSkill + "/" + closestNPC.state + "/" + closestNPC.response +", " + curNPC.influence + "/" + curNPC.influenceMax + "/"
-            + curNPC.influenceSkill + "/" + curNPC.state + "/" + curNPC.response);
+            if (isDebug) {
+                DebugPrintState("I'm talking to "+closestNPCGO.name+", a "+closestNPC.type);
+                DebugPrintState("Me vs audience I / Imax / IS / S / R: " + curNPC.influence + " / " + curNPC.influenceMax + " / "
+                    + curNPC.influenceSkill + " / " + curNPC.state + " / " + curNPC.response + ", " + closestNPC.influence
+                    + " / " + closestNPC.influenceMax + " / " + closestNPC.influenceSkill + " / " + closestNPC.state + " / " + closestNPC.response);
+            }
 
             timeStart = Time.time;
             duration = avgDuration * Random.Range(1 - randDurMulti, 1 + randDurMulti);
@@ -77,32 +79,34 @@ public class TalkState : State
 
     public override void ExitState(bool isDebug = false, bool isImmediateExit = false)
     {
-        if (isDebug) DebugPrintState("Exit called, isInitiator = "+isInitiator.ToString());
+        if (isDebug) DebugPrintState("Exiting talk, isInitiator = "+isInitiator.ToString());
 
         //if initiator, get influenced less
         if (isInitiator) {
-            curNPC.influence += (int)(closestInfSkill * 0.5); //TODO % influence if talk cut short
+            curNPC.influence += (int)(duration * closestInfSkill * 0.5); //TODO % influence if talk cut short
             isInitiator = false;
-        } else curNPC.influence += (int)(closestInfSkill * 1);
+        } else curNPC.influence += (int)(duration * closestInfSkill * 1);
 
         //convert if influenced
         if (curNPC.influence >= curNPC.influenceMax) { //TODO play poof
-            curNPC.response = closestNPC.response;
+            // Response old = curNPC.response;
+            curNPC.response = closestResponse;
             curNPC.influence = 0;
+            DebugPrintState("Changed their mind!");
         }
 
-        // DebugPrintState("After talk I/Imax/IS/R: " + curNPC.influence + "/" + curNPC.influenceMax + "/"
-        //     + curNPC.influenceSkill + "/" + curNPC.response);
-        DebugPrintState(curNPC.type.ToString() + ": Influence after talk ="
-            + curNPC.influence.ToString() + "/" + curNPC.influenceMax);
+        if (isDebug) {
+            DebugPrintState("As "+curNPC.type.ToString()+" after talk I/Imax/IS/R: " + curNPC.influence + " / " + curNPC.influenceMax + " / "
+                + curNPC.influenceSkill + "/" + curNPC.response);
+        }
 
         closestNPCGO = null;
         closestNPC = null;
-        base.ExitState(isImmediateExit);
+        base.ExitState(isDebug, isImmediateExit);
     }
 
     //edited from: https://forum.unity.com/threads/clean-est-way-to-find-nearest-object-of-many-c.44315/
-    public GameObject GetClosestNPCGO()
+    public GameObject GetClosestNPCGO() //TODO move to state
     {
         Collider2D[] cldrs = Physics2D.OverlapCircleAll(transform.position, maxTalkDist);
 
@@ -125,6 +129,6 @@ public class TalkState : State
             }
         }
 
-        return bestTarget.gameObject; //TODO null error?
+        return bestTarget.gameObject;
     }
 }

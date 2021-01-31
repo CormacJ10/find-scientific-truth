@@ -33,7 +33,7 @@ public class Response : MonoBehaviour
         } else {
             this.sprite = spr;
         }
-
+        this.spriteName = spriteName;
         this.boolean = boolean;
         this.num = num;
         this.word = word;
