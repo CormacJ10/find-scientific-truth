@@ -10,6 +10,7 @@ public class LevelManger : MonoBehaviour
     public GameObject smartNpc;
     public GameObject badNpc;
     public List<NPC> npcList;
+    // public List<String> quizList;
 
     // Smart NPCs are tracked because they're the end goal.
     public int smartNpcCount;
@@ -18,6 +19,9 @@ public class LevelManger : MonoBehaviour
     //UI
     public GameObject choicePanel;
     public GameObject gamePanel;
+    public GameObject quizPanel;
+    public GameObject winScreen;
+    public GameObject loseScreen;
     public GameObject choiceGO;
     public Text totalScientistTxt;
 
@@ -33,6 +37,8 @@ public class LevelManger : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        // quizList = {{"Given a list of cities and the distances between each pair of cities, what is the shortest possible route that visits each city exactly once and returns to the origin city?", "What is the Travelling Salesman Problem?"}};
+
         responseList = new List<GameObject>();
 
         npcs = NPCSpawner.npcArray;
@@ -79,6 +85,11 @@ public class LevelManger : MonoBehaviour
         //     + worldToUISpace(GameObject.FindObjectOfType<Canvas>(), choicePanel.GetComponent<RectTransform>().anchoredPosition).ToString());
     }
 
+    public void PopUpQuiz()
+    {
+        quizPanel.SetActive(true);
+    }
+
     public void ChoiceButtonPressSmart()
     {
         ChoiceButtonPress(NPC.NPCType.Smart);
@@ -99,6 +110,17 @@ public class LevelManger : MonoBehaviour
     {
         // choicePanel.transform.parent.gameObject.GetComponent<FSM>().Reveal(type);
         choiceGO.GetComponent<FSM>().Reveal(type);
+    }
+
+    public void checkAnswer(GameObject button){
+        string answer = button.GetComponent<Text>().text;
+
+        if(answer == "What is the Travelling Salesman Problem?"){
+            winScreen.SetActive(true);
+        }
+        else{
+            loseScreen.SetActive(true);
+        }
     }
 
     //https://stackoverflow.com/questions/45046256/move-ui-recttransform-to-world-position
