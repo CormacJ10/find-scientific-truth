@@ -15,7 +15,7 @@ public class WalkState : State
 
     public override IEnumerator StartState(bool isDebug = false)
     {
-        if (GetComponent<Rigidbody2D>() == null) {
+        if (GetComponentInChildren<Rigidbody2D>() == null) {
             DebugPrintState(this.gameObject.name + ": Rigidbody2D not found");
             yield return null;
         }
@@ -25,8 +25,8 @@ public class WalkState : State
         Vector2 randDir = new Vector2(Mathf.Cos(random), Mathf.Sin(random));
         float velMag = avgVel * Random.Range(1-randVelMulti, 1+randVelMulti);
 
-        GetComponent<Rigidbody2D>().mass = 1;
-        GetComponent<Rigidbody2D>().velocity = randDir * velMag;
+        GetComponentInChildren<Rigidbody2D>().mass = 1;
+        GetComponentInChildren<Rigidbody2D>().velocity = randDir * velMag;
         if (isDebug) DebugPrintState("Walk started");
         timeStart = Time.time;
         duration = avgDuration * Random.Range(1-randDurMulti,1+randDurMulti);
@@ -46,8 +46,8 @@ public class WalkState : State
     public override void ExitState(bool isDebug = false, bool isImmediateExit = false)
     {
         //stop walking
-        GetComponent<Rigidbody2D>().velocity = Vector2.zero; //TODO may need to set rb to/from static to prevent other states getting pushed around
-        GetComponent<Rigidbody2D>().mass = 1000000;
+        GetComponentInChildren<Rigidbody2D>().velocity = Vector2.zero;
+        GetComponentInChildren<Rigidbody2D>().mass = 1000000;
         base.ExitState(isDebug, isImmediateExit);
     }
 }

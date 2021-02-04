@@ -10,12 +10,15 @@ public class NPCStats : MonoBehaviour
     public NPC.NPCType type = NPC.NPCType.Base;
     public int spotlightEffect = 2;
     public bool isSpotlighted;
+    public Animator spotAnim;
+    [SerializeField] public Response response;
 
     private void Update() {
         NPC curNPC;
         if (NPC.NameToNPC(gameObject.name) != null) {
             curNPC = NPC.NameToNPC(gameObject.name);
             influence = curNPC.influence;
+            response = curNPC.response;
             
             if (isSpotlighted) curNPC.influenceSkill = influenceSkill*spotlightEffect;
         }
@@ -23,6 +26,7 @@ public class NPCStats : MonoBehaviour
 
     public void SwitchSpotlight()
     {
-        isSpotlighted = !isSpotlighted; //TODO lights anim
+        isSpotlighted = !isSpotlighted;
+        spotAnim.SetBool("isSpotlighted",!spotAnim.GetBool("isSpotlighted"));
     }
 }

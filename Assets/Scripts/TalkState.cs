@@ -92,7 +92,7 @@ public class TalkState : State
             // Response old = curNPC.response;
             curNPC.response = closestResponse;
             curNPC.influence = 0;
-            DebugPrintState("Changed their mind!");
+            // DebugPrintState("Changed their mind!");
         }
 
         if (isDebug) {

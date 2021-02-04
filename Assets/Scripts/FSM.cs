@@ -10,12 +10,8 @@ public abstract class FSM : MonoBehaviour
     public bool isStateRunning = false;
     public bool isDebug = false;
 
-    //
-    public Sprite altSprite;
-    //
-
     // Start is called before the first frame update
-    void Start()
+    public virtual void Start()
     {
         stateList = new List<State>();
         stateList = GetComponents<State>().ToList<State>(); //make sure no dupes
@@ -23,6 +19,8 @@ public abstract class FSM : MonoBehaviour
         curState = stateList[0]; //whichever state that's top in inspector is starting state
         StartCoroutine(RunFSM());
     }
+
+    public virtual void Update() {}
 
     //FSM runs whatever active state's UpdateState()
     public IEnumerator RunFSM()

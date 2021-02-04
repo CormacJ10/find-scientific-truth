@@ -16,8 +16,8 @@ public class NPCSpawner : MonoBehaviour
     public GameObject baseNpc;
     public GameObject smartNpc;
     public GameObject badNpc;
+    public GameObject responseTemplate;
 
-    public Sprite dummySprite;
 
     [HideInInspector] public static List<NPC> npcArray;
     public int baseCount = 10;
@@ -44,29 +44,43 @@ public class NPCSpawner : MonoBehaviour
 
                 if (spawnedSmart < smartCount) {
                     npc = smartNpc;
+                    npcType = NPC.NPCType.Smart;
                     spawnedSmart++;
                 } else if (spawnedBad < badCount) {
                     npc = badNpc;
+                    npcType = NPC.NPCType.Bad;
                     spawnedBad++;
                 }
 
-                npc.GetComponent<SpriteRenderer>().sprite = dummySprite;
-
-                // npcSprite = dummySprite;
-
                 GameObject obj = GameObject.Instantiate(npc, rndPoint2D, Quaternion.identity);
                 obj.transform.parent = NPCContainer.transform;
+                obj.name = "NPC "+i.ToString();
+
+                List<string> guesses = new List<string>(); //TODO possible guesses
+                string answer = "A"; //TODO must input answer as A
+                Response resp = NPC.GenerateResponse(guesses, answer, npcType);
                 
                 NPCStats stats = obj.GetComponent<NPCStats>();
                 NPC newNpc = new NPC(obj, npcType);
+                newNpc.response = resp;
                 npcArray.Add(newNpc);
                 i++;
             }
         }
 
+    StartCoroutine(DeactivateTemplates());
+    }
+
+    private IEnumerator DeactivateTemplates()
+    {
+        // yield return new WaitForSeconds(0.01f);
+
         baseNpc.SetActive(false);
         smartNpc.SetActive(false);
         badNpc.SetActive(false);
+        // responseTemplate.SetActive(false);
+
+        yield return null;
     }
 
     public List<NPC> getNPCList(){

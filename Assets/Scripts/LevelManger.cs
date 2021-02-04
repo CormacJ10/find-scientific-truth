@@ -59,7 +59,7 @@ public class LevelManger : MonoBehaviour
             choicePanel.transform.position = choiceGO.transform.position;
         }
 
-        while(smartNpcCount != smartNpcTotal){
+        if (smartNpcCount != smartNpcTotal){
             totalScientistTxt.text = smartNpcCount.ToString() + " of "+ smartNpcTotal.ToString() + "Scientists Found";
             if(smartNpcCount == smartNpcTotal){
                 guessButton.gameObject.SetActive(true);

@@ -12,6 +12,17 @@ public class SmartFSM : FSM
     public float[] walkPcArray = { 0.0f, 0.3f, 0.7f, 0.0f };
     public float[] talkPcArray = { 0.7f, 0.3f, 0.0f, 0.0f };
     public float[] influencePcArray = { 0.5f, 0.0f, 0.5f, 0.0f };
+    public GameObject baseGO;
+    public GameObject trueGO;
+    public Animator poofAnim;
+    public GameObject flash;
+
+    public override void Start()
+    {
+        trueGO.SetActive(false);
+        baseGO.SetActive(true);
+        base.Start();
+    }
 
     public override NPC.NPCState PickNextState(NPC.NPCState curStateType)
     {
@@ -80,8 +91,13 @@ public class SmartFSM : FSM
 
     public override void Reveal(NPC.NPCType type)
     {
-        if (altSprite != null && type == NPC.NPCType.Smart) {
-            gameObject.GetComponent<SpriteRenderer>().sprite = altSprite;
+        if (type == NPC.NPCType.Smart) {
+            baseGO.SetActive(false);
+            trueGO.SetActive(true);
+            poofAnim.SetTrigger("Reveal");
+            flash.SetActive(true);
+            gameObject.GetComponent<AnimController>().UpdateAnimator(0.3f, 0.5f);
+            
             GameObject.FindObjectOfType<LevelManger>().smartNpcCount++;
         } //else do something
     }

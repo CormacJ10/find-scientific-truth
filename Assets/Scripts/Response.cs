@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Response : MonoBehaviour
+public class Response
 {
     //State variable
     public enum ResponseType
@@ -25,20 +25,21 @@ public class Response : MonoBehaviour
     public Color col;
     public Color bg; //if colour is bright => dark background, and vice versa
 
-    public Response(ResponseType type, string spriteName, bool boolean, float num, string word, float rot, Color col)
+    // public Response(ResponseType type, string spriteName, bool boolean, float num, string word, float rot, Color col)
+    public Response(string guess)
     {
-        Sprite spr = Resources.Load<Sprite>("Sprites/" + spriteName);
-        if (spr == null) {
-            Debug.Log(spriteName + " does not exist in Resources/Sprites folder");
-        } else {
-            this.sprite = spr;
-        }
-        this.spriteName = spriteName;
-        this.boolean = boolean;
-        this.num = num;
-        this.word = word;
-        this.rot = rot;
-        this.col = col;
+        // Sprite spr = Resources.Load<Sprite>("Sprites/" + spriteName);
+        // if (spr == null) {
+        //     Debug.Log(spriteName + " does not exist in Resources/Sprites folder");
+        // } else {
+        //     this.sprite = spr;
+        // }
+        this.spriteName = null;
+        this.boolean = false;
+        this.num = 0;
+        this.word = guess;
+        this.rot = 0;
+        this.col = Color.black;
 
         if (col.grayscale > 0.5f) {
             bg = Color.black;

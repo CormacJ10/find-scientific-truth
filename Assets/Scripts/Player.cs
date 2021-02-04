@@ -26,9 +26,11 @@ public class Player : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown("e")) {
-            lmComp.ActivateChoice();
+            Debug.Log("e pressed");
             GameObject go = gameObject.GetComponent<TalkState>().GetClosestNPCGO();
+            // Debug.Log(go.name);
             if (go != null) {
+                lmComp.ActivateChoice();
                 lmComp.PopUpChoice(go);
             }
         }
@@ -42,8 +44,8 @@ public class Player : MonoBehaviour
         float h = Input.GetAxis("Horizontal");//Gives a number between 1(Right Arrow Key or 'D') and -1(Left Arrow Key or 'A').
 
         if (h > 0) {
-            gameObject.GetComponent<SpriteRenderer>().flipX = true;
-        } else if (h < 0) gameObject.GetComponent<SpriteRenderer>().flipX = false;
+            gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
+        } else if (h < 0) gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
         
         body.AddForce(new Vector2(forceX, forceY));
 

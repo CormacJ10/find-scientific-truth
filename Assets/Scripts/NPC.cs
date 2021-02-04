@@ -81,4 +81,40 @@ public class NPC
                 return false;
         }
     }
+
+    //npcs guess from list of possible options (unimplemented)
+    public static Response GenerateResponse(List<string> guesses, string answer, NPC.NPCType npcType)
+    {
+        int rand = Random.Range(0,6);
+
+        string guess = "A";
+        switch (rand)
+        {
+            case 0:
+                guess = "A";
+                break;
+            case 1:
+                guess = "B";
+                break;
+            case 2:
+                guess = "C";
+                break;
+            case 3:
+                guess = "D";
+                break;
+            case 4:
+                guess = "tick";
+                break;
+            case 5:
+                guess = "cross";
+                break;
+        }
+        
+        if (npcType == NPCType.Smart && Random.value < 0.7f) {
+            guess = answer;
+        }
+        
+        return new Response(guess);
+    }
+
 }
