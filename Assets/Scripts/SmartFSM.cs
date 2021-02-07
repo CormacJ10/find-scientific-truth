@@ -16,12 +16,14 @@ public class SmartFSM : FSM
     public GameObject trueGO;
     public Animator poofAnim;
     public GameObject flash;
+    [HideInInspector] public bool isRevealed;
 
     public override void Start()
     {
         trueGO.SetActive(false);
         baseGO.SetActive(true);
         base.Start();
+        isRevealed = false;
     }
 
     public override NPC.NPCState PickNextState(NPC.NPCState curStateType)
@@ -91,14 +93,17 @@ public class SmartFSM : FSM
 
     public override void Reveal(NPC.NPCType type)
     {
-        if (type == NPC.NPCType.Smart) {
+        if (type == NPC.NPCType.Smart && isRevealed == false) {
             baseGO.SetActive(false);
             trueGO.SetActive(true);
             poofAnim.SetTrigger("Reveal");
             flash.SetActive(true);
             gameObject.GetComponent<AnimController>().UpdateAnimator(0.3f, 0.5f);
             
+            isRevealed = true;
             GameObject.FindObjectOfType<LevelManger>().smartNpcCount++;
+            
+            GameObject.FindObjectOfType<LevelManger>().TriggerShake();
         } //else do something
     }
 }

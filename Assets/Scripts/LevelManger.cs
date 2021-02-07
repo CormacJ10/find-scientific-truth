@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+// using System.Math;s
 
 public class LevelManger : MonoBehaviour
 {
@@ -24,6 +25,12 @@ public class LevelManger : MonoBehaviour
     public GameObject loseScreen;
     public GameObject choiceGO;
     public Text totalScientistTxt;
+    public Text totalScientistTxtShadow;
+    public Transform cameraTransform;
+    private float shakeDuration = 0f;
+    private float shakeMagnitude = 0.7f;
+    private float dampingSpeed = 1.0f;
+    Vector3 initialPosition;
 
     //Response Text
     public GameObject responsetext1;
@@ -48,8 +55,13 @@ public class LevelManger : MonoBehaviour
         smartNpcTotal = GameObject.FindObjectOfType<NPCSpawner>().smartCount;
 
         totalScientistTxt.text = smartNpcCount.ToString() + " of "+ smartNpcTotal.ToString() + " Scientists Found!";
+        totalScientistTxtShadow.text = smartNpcCount.ToString() + " of "+ smartNpcTotal.ToString() + " Scientists Found!";
 
         // Debug.Log(smartNpcTotal);
+    }
+
+    void OnEnable(){
+        initialPosition = transform.localPosition;
     }
 
     // Update is called once per frame
@@ -59,12 +71,25 @@ public class LevelManger : MonoBehaviour
             choicePanel.transform.position = choiceGO.transform.position;
         }
 
-        if (smartNpcCount != smartNpcTotal){
-            totalScientistTxt.text = smartNpcCount.ToString() + " of "+ smartNpcTotal.ToString() + "Scientists Found";
-            if(smartNpcCount == smartNpcTotal){
-                guessButton.gameObject.SetActive(true);
-            }
+        totalScientistTxt.text = smartNpcCount.ToString() + " of "+ smartNpcTotal.ToString() + " Scientists Found!";
+        totalScientistTxtShadow.text = smartNpcCount.ToString() + " of "+ smartNpcTotal.ToString() + " Scientists Found!";
+        if(smartNpcCount == smartNpcTotal){
+            guessButton.SetActive(true);
         }
+
+        if(shakeDuration > 0){
+            transform.localPosition = initialPosition + Random.insideUnitSphere * shakeMagnitude;
+
+            shakeDuration -= Time.deltaTime * dampingSpeed;
+        }
+        else{
+            shakeDuration = 0;
+            transform.localPosition = initialPosition;
+        }
+    }
+
+    public void TriggerShake(){
+        shakeDuration = 2.0f;
     }
 
     public void ActivateChoice(){
@@ -87,6 +112,7 @@ public class LevelManger : MonoBehaviour
 
     public void PopUpQuiz()
     {
+        gamePanel.SetActive(false);
         quizPanel.SetActive(true);
     }
 
@@ -112,10 +138,10 @@ public class LevelManger : MonoBehaviour
         choiceGO.GetComponent<FSM>().Reveal(type);
     }
 
-    public void checkAnswer(GameObject button){
-        string answer = button.GetComponent<Text>().text;
+    public void checkAnswer(Button button){
+        string answer = button.GetComponent<Text>().text.Split(' ')[0];
 
-        if(answer == "What is the Travelling Salesman Problem?"){
+        if(answer == "A."){
             winScreen.SetActive(true);
         }
         else{

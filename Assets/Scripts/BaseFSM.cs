@@ -65,6 +65,7 @@ public class BaseFSM : FSM
 
     public override void Reveal(NPC.NPCType type)
     {
+        GameObject.FindObjectOfType<LevelManger>().TriggerShake();
         //do something bad
     }
 }

@@ -151,7 +151,10 @@ public class BadFSM : FSM
             baseGO.SetActive(false);
             trueGO.SetActive(true);
             poofAnim.SetTrigger("Reveal");
+
             gameObject.GetComponent<AnimController>().UpdateAnimator(0.5f, 0.2f);
+            
+            GameObject.FindObjectOfType<LevelManger>().TriggerShake();
         } //else do something
     }
 }
